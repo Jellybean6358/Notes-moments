@@ -1,0 +1,82 @@
+import 'package:flutter/material.dart';
+import '../Database/database_helper';
+import '../models/journal_entry';
+import 'addpage'; // Import AddNote
+import 'editpage'; // Import EditNote
+
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  late DatabaseHelper dbHelper;
+  List<Note> notes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    dbHelper = DatabaseHelper();
+    _loadNotes();
+  }
+
+  void _loadNotes() async {
+    notes = await dbHelper.getNotes();
+    setState(() {});
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Notes'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.pushNamed(context, '/fav'); // Navigate to Favorites
+            },
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: notes.length,
+        itemBuilder: (context, index) {
+          final note = notes[index];
+          return ListTile(
+            title: Text(note.title), // Display the title
+            subtitle: Text(note.content), // Display content
+            onTap: () async {
+                final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditNotePage(note: note),
+                ),
+              );
+              if (result != null && result == true) {
+                    _loadNotes();
+                  }
+
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddNotePage()),
+          );
+          if (result != null && result == true) {
+            _loadNotes();
+          }
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+}

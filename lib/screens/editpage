@@ -1,0 +1,64 @@
+import 'package:flutter/material.dart';
+import '../Database/database_helper';
+import '../models/journal_entry';
+
+class EditNotePage extends StatefulWidget {
+  final Note note;
+  const EditNotePage({super.key, required this.note});
+
+  @override
+  State<EditNotePage> createState() => _EditNotePageState();
+}
+
+class _EditNotePageState extends State<EditNotePage> {
+  late TextEditingController _titleController;
+  late TextEditingController _contentController;
+  late DatabaseHelper dbHelper;
+
+    @override
+  void initState() {
+    super.initState();
+    dbHelper = DatabaseHelper();
+    _titleController = TextEditingController(text: widget.note.title);
+    _contentController = TextEditingController(text: widget.note.content);
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Edit Note'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
+            ),
+            TextField(
+              controller: _contentController,
+              decoration: const InputDecoration(labelText: 'Content'),
+              maxLines: 5,
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final title = _titleController.text;
+                final content = _contentController.text;
+                if (title.isNotEmpty && content.isNotEmpty) {
+                  widget.note.title = title;
+                  widget.note.content = content;
+                  await dbHelper.updateNote(widget.note);
+                  Navigator.pop(context, true); // Return true to indicate success
+                }
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
