@@ -49,6 +49,13 @@ class DatabaseHelper {
     return await db.update('notes', note.toMap(), where: 'id = ?', whereArgs: [note.id]);
   }
 
+  Future<int> deleteNote(int id) async {
+    final db = await this.db;
+    return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
+  }
+
+)
+
   Future<List<Note>> getFavoriteNotes() async {
     final db = await this.db;
     final List<Map<String, dynamic>> maps = await db.query('notes', where: 'isFavorite = 1');

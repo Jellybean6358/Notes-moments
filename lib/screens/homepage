@@ -27,6 +27,10 @@ class _HomepageState extends State<Homepage> {
     setState(() {});
   }
 
+  void _deleteNote(Note note) async {
+    await dbHelper.deleteNote(id);
+    _loadNotes();
+  }
 
 
   @override
@@ -41,13 +45,37 @@ class _HomepageState extends State<Homepage> {
               Navigator.pushNamed(context, '/fav'); // Navigate to Favorites
             },
           ),
+          IconButton(
+            icon: const Icon(Icons.grid_view),
+            onPressed:(){
+              setState((){
+                //_isGLay=!_isGLay;
+              });
+            },
+            //icon: Icon(_isGLay?Icons.grid_view:Icons.list),
+          ),
         ],
       ),
       body: ListView.builder(
         itemCount: notes.length,
         itemBuilder: (context, index) {
           final note = notes[index];
-          return ListTile(
+          return Dismissible(
+            key: Key(note.id.toString()),
+            direction: DismissDirection.StartToEnd,
+            background: Container(
+              color:Colors.red,
+              child: const Icon(Icons.delete),
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            )
+            onDismissed: (direction) {
+              _deleteNote(note.id!);
+              ScaffolfMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Note deleted')),
+              );
+            },
+            child: ListTile(
             title: Text(note.title), // Display the title
             subtitle: Text(note.content), // Display content
             onTap: () async {
@@ -62,6 +90,7 @@ class _HomepageState extends State<Homepage> {
                   }
 
             },
+            ),
           );
         },
       ),
