@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../Database/database_helper';
-import '../models/journal_entry';
+import '../Database/database_helper.dart';
+import '../models/journal_entry.dart';
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -17,13 +17,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
   void initState() {
     super.initState();
     dbHelper = DatabaseHelper();
-    _loadFavoriteNotes();
+    //_loadFavoriteNotes();
   }
 
-  void _loadFavoriteNotes() async {
+  /*void _loadFavoriteNotes() async {
     favoriteNotes = await dbHelper.getFavoriteNotes();
     setState(() {});
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

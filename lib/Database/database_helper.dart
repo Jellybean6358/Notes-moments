@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import '../models/journal_entry';
+import '../models/journal_entry.dart';
 
 class DatabaseHelper {
   Database? _db;
@@ -53,8 +53,6 @@ class DatabaseHelper {
     final db = await this.db;
     return await db.delete('notes', where: 'id = ?', whereArgs: [id]);
   }
-
-)
 
   Future<List<Note>> getFavoriteNotes() async {
     final db = await this.db;

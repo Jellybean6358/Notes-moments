@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../Database/database_helper';
-import '../models/journal_entry';
-import 'addpage'; // Import AddNote
-import 'editpage'; // Import EditNote
+import '../Database/database_helper.dart';
+import '../models/journal_entry.dart';
+import 'addpage.dart';
+import 'editpage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -27,7 +27,7 @@ class _HomepageState extends State<Homepage> {
     setState(() {});
   }
 
-  void _deleteNote(Note note) async {
+  void _deleteNote(int id) async {
     await dbHelper.deleteNote(id);
     _loadNotes();
   }
@@ -62,16 +62,16 @@ class _HomepageState extends State<Homepage> {
           final note = notes[index];
           return Dismissible(
             key: Key(note.id.toString()),
-            direction: DismissDirection.StartToEnd,
+            direction: DismissDirection.startToEnd,
             background: Container(
               color:Colors.red,
               child: const Icon(Icons.delete),
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            )
+            ),
             onDismissed: (direction) {
               _deleteNote(note.id!);
-              ScaffolfMessenger.of(context).showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Note deleted')),
               );
             },
@@ -82,7 +82,7 @@ class _HomepageState extends State<Homepage> {
                 final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditNotePage(note: note),
+                  builder: (context) => EditNotePage(note1: note),
                 ),
               );
               if (result != null && result == true) {

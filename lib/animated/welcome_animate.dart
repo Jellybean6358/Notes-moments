@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../screens/homepage';
+import '../screens/homepage.dart';
 
 class WelcomeAnimateScreen extends StatefulWidget {
   const WelcomeAnimateScreen({super.key});

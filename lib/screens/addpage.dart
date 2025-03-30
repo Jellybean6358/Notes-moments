@@ -1,34 +1,30 @@
 import 'package:flutter/material.dart';
-import '../Database/database_helper';
-import '../models/journal_entry';
+import '../Database/database_helper.dart';
+import '../models/journal_entry.dart';
 
-class EditNotePage extends StatefulWidget {
-  final Note note;
-  const EditNotePage({super.key, required this.note});
+class AddNotePage extends StatefulWidget {
+  const AddNotePage({super.key});
 
   @override
-  State<EditNotePage> createState() => _EditNotePageState();
+  State<AddNotePage> createState() => _AddNotePageState();
 }
 
-class _EditNotePageState extends State<EditNotePage> {
-  late TextEditingController _titleController;
-  late TextEditingController _contentController;
+class _AddNotePageState extends State<AddNotePage> {
+  final _titleController = TextEditingController();
+  final _contentController = TextEditingController();
   late DatabaseHelper dbHelper;
 
-    @override
+  @override
   void initState() {
     super.initState();
     dbHelper = DatabaseHelper();
-    _titleController = TextEditingController(text: widget.note.title);
-    _contentController = TextEditingController(text: widget.note.content);
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Note'),
+        title: const Text('Add Note'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -48,9 +44,7 @@ class _EditNotePageState extends State<EditNotePage> {
                 final title = _titleController.text;
                 final content = _contentController.text;
                 if (title.isNotEmpty && content.isNotEmpty) {
-                  widget.note.title = title;
-                  widget.note.content = content;
-                  await dbHelper.updateNote(widget.note);
+                  await dbHelper.insertNote(Note(title: title, content: content, date: DateTime.now()));
                   Navigator.pop(context, true); // Return true to indicate success
                 }
               },

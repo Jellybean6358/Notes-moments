@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/homepage';
-import 'screens/favpage';
-import 'animated/welcome_animate';
+import 'animated/welcome_animate.dart';
 
 void main() {
   runApp(const MyApp());
