@@ -62,7 +62,7 @@ class DatabaseHelper {
     });
   }
 
-  Future<int> toggleFavorite(int noteId, bool isFavorite) async {
+  Future<int> makeFavorite(int noteId, bool isFavorite) async {
     final db = await this.db;
     int favoriteValue = isFavorite ? 1 : 0;
     return await db.update('notes', {'isFavorite': favoriteValue}, where: 'id = ?', whereArgs: [noteId]);

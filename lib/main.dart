@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/screens/favpage.dart';
+import 'package:myapp/screens/homepage.dart';
 import 'animated/welcome_animate.dart';
 
 void main() {
@@ -13,7 +15,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Journal App',
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.blue),
-      home: const WelcomeAnimateScreen(),
+      initialRoute: '/',
+      routes: {
+        '/':(context)=>const Homepage(),
+        '/fav':(context)=>const FavoritesPage(),
+      },
     );
   }
 }

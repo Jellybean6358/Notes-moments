@@ -17,13 +17,13 @@ class _FavoritesPageState extends State<FavoritesPage> {
   void initState() {
     super.initState();
     dbHelper = DatabaseHelper();
-    //_loadFavoriteNotes();
+    _loadFavoriteNotes();
   }
 
-  /*void _loadFavoriteNotes() async {
+  void _loadFavoriteNotes() async {
     favoriteNotes = await dbHelper.getFavoriteNotes();
     setState(() {});
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {

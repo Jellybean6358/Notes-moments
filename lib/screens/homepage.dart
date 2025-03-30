@@ -3,6 +3,7 @@ import '../Database/database_helper.dart';
 import '../models/journal_entry.dart';
 import 'addpage.dart';
 import 'editpage.dart';
+import 'favpage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -27,7 +28,15 @@ class _HomepageState extends State<Homepage> {
     setState(() {});
   }
 
-  void _deleteNote(int id) async {
+  void _open_favoritesPage(Note note) async{
+    await dbHelper.makeFavorite(note.id!,!note.isFavorite);
+    _loadNotes();
+  }
+
+  void _deleteNote(int id,bool isFavorite) async {
+    if(isFavorite){
+      await dbHelper.makeFavorite(id,false);
+    }
     await dbHelper.deleteNote(id);
     _loadNotes();
   }
@@ -41,8 +50,8 @@ class _HomepageState extends State<Homepage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.favorite),
-            onPressed: () {
-              Navigator.pushNamed(context, '/fav'); // Navigate to Favorites
+            onPressed: (){
+              Navigator.pushNamed(context,'/fav');
             },
           ),
           IconButton(
@@ -62,18 +71,30 @@ class _HomepageState extends State<Homepage> {
           final note = notes[index];
           return Dismissible(
             key: Key(note.id.toString()),
-            direction: DismissDirection.startToEnd,
+            direction: DismissDirection.horizontal,
             background: Container(
               color:Colors.red,
-              child: const Icon(Icons.delete),
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: const Icon(Icons.delete),
+            ),
+            secondaryBackground: Container(
+              color:Colors.blue,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: const Icon(Icons.favorite),
             ),
             onDismissed: (direction) {
-              _deleteNote(note.id!);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Note deleted')),
-              );
+              if(direction==DismissDirection.startToEnd) {
+                _deleteNote(note.id!,note.isFavorite);
+                setState(() {
+                  notes.removeAt(index);
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Note deleted'),backgroundColor: Colors.red,
+                  ),
+                );
+              }
             },
             child: ListTile(
             title: Text(note.title), // Display the title
@@ -87,14 +108,27 @@ class _HomepageState extends State<Homepage> {
               );
               if (result != null && result == true) {
                     _loadNotes();
-                  }
-
+              }
             },
+              trailing:IconButton(
+                icon:Icon(
+                    note.isFavorite?Icons.favorite:Icons.favorite_border,
+                    color:note.isFavorite?Colors.blue:Colors.grey,
+              ),
+              onPressed:(){
+                _open_favoritesPage(note);
+              },
+              ),
             ),
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: Padding(
+        padding:EdgeInsets.only(left:30),
+      child:Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+      FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push(
             context,
@@ -106,6 +140,14 @@ class _HomepageState extends State<Homepage> {
         },
         child: const Icon(Icons.add),
       ),
+          Expanded(child: Container()),
+          FloatingActionButton(
+            onPressed: (){},
+            child: Icon(Icons.camera),
+          )
+    ],
+      )
+    )
     );
   }
 }
